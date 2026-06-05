@@ -187,8 +187,8 @@ function ChatScreen({ config, onReset }) {
     setLoading(true);
     try {
       const res = await fetch("/api/chat", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514",
           max_tokens: 1000,
@@ -197,10 +197,15 @@ function ChatScreen({ config, onReset }) {
         }),
       });
       const data = await res.json();
-      const reply = data.content && data.content[0] ? data.content[0].text : "Sorry, I could not process that.";
-      setMessages(m => [...m, { role: "assistant", content: } catch (e) {
-  setMessages(m => [...m, { role: "assistant", content: "Error: " + e.message }]);
-     }
+      if (data.error) {
+        setMessages(m => [...m, { role: "assistant", content: "Error: " + (data.details ? JSON.stringify(data.details) : data.error) }]);
+      } else {
+        const reply = data.content && data.content[0] ? data.content[0].text : "Sorry, I could not process that.";
+        setMessages(m => [...m, { role: "assistant", content: reply }]);
+      }
+    } catch (e) {
+      setMessages(m => [...m, { role: "assistant", content: "Error: " + e.message }]);
+    }
     setLoading(false);
   };
 
