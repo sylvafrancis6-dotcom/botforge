@@ -198,10 +198,9 @@ function ChatScreen({ config, onReset }) {
       });
       const data = await res.json();
       const reply = data.content && data.content[0] ? data.content[0].text : "Sorry, I could not process that.";
-      setMessages(m => [...m, { role: "assistant", content: reply }]);
-    } catch (e) {
-      setMessages(m => [...m, { role: "assistant", content: "Having trouble connecting. Please try again." }]);
-    }
+      setMessages(m => [...m, { role: "assistant", content: } catch (e) {
+  setMessages(m => [...m, { role: "assistant", content: "Error: " + e.message }]);
+     }
     setLoading(false);
   };
 
